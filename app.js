@@ -2,138 +2,128 @@ let table;
 let columnsGlobal = [];
 
 fetch("stocks_dashboard.json?t=" + Date.now())
-    .then(response => response.json())
-    .then(data => {
+  .then(response => response.json())
+  .then(data => {
 
-        if (!data || data.length === 0) {
-            document.getElementById("summaryBar").innerHTML =
-                "⚠️ 沒有資料";
-            return;
+    if (!data || data.length === 0) {
+      document.getElementById("summaryBar").innerHTML = "⚠️ 沒有資料";
+      return;
+    }
+
+    // ===== Summary =====
+
+    const total = data.length;
+
+    let portfolioCount = 0;
+    if (data[0]["In Portfolio?"] !== undefined) {
+      portfolioCount = data.filter(
+        x => String(x["In Portfolio?"]).trim().toUpperCase() === "YES"
+      ).length;
+    }
+
+    document.getElementById("summaryBar").innerHTML =
+      `📊 共 <b>${total}</b> 檔股票　｜　🟢 在庫存 <b>${portfolioCount}</b> 檔　｜　🔴 不在庫存 <b>${total - portfolioCount}</b> 檔`;
+
+    // ===== 建立欄位 =====
+
+    columnsGlobal = Object.keys(data[0]).map(key => ({
+      title: key,
+      data: key,
+
+      render: function (value, type, row) {
+
+        // 排序與搜尋使用原始值
+        if (type === "sort" || type === "filter") {
+          return value;
         }
 
-        // ===== Summary =====
-
-        const total = data.length;
-
-        let portfolioCount = 0;
-
-        if (data[0]["In Portfolio?"] !== undefined) {
-            portfolioCount = data.filter(
-                x => String(x["In Portfolio?"]).toUpperCase() === "YES"
-            ).length;
+        // ---------- In Portfolio ----------
+        if (key === "In Portfolio?") {
+          if (String(value).trim().toUpperCase() === "YES") {
+            return '<span class="badge badge-true">🟢 YES</span>';
+          } else {
+            return '<span class="badge badge-false">🔴 NO</span>';
+          }
         }
 
-        document.getElementById("summaryBar").innerHTML =
-            `📊 共 <b>${total}</b> 檔股票　｜　🟢 在庫存 <b>${portfolioCount}</b> 檔　｜　🔴 不在庫存 <b>${total - portfolioCount}</b> 檔`;
+        // ---------- true / false ----------
+        if (typeof value === "boolean") {
+          if (value) {
+            return '<span class="badge badge-true">✔ TRUE</span>';
+          } else {
+            return '<span class="badge badge-false">✘ FALSE</span>';
+          }
+        }
 
-        // ===== Columns =====
+        if (String(value).trim().toLowerCase() === "true") {
+          return '<span class="badge badge-true">✔ TRUE</span>';
+        }
 
-        columnsGlobal = Object.keys(data[0]).map(key => ({
-            title: key,
-            data: key
-        }));
+        if (String(value).trim().toLowerCase() === "false") {
+          return '<span class="badge badge-false">✘ FALSE</span>';
+        }
 
-        table = new DataTable("#stockTable", {
-            data: data,
-            columns: columnsGlobal,
-            pageLength: 50,
-            scrollX: true,
-            order: [],
+        // ---------- PEG ----------
+        if (key.includes("PEG")) {
 
-            createdRow: function (row, rowData) {
+          const peg = parseFloat(value);
 
-                $("td", row).each(function (idx) {
+          if (!isNaN(peg)) {
 
-                    const colName = columnsGlobal[idx].title;
-                    const rawValue = rowData[colName];
-                    const value = String(rawValue).trim().toUpperCase();
+            let cls = "peg-high";
 
-                    // ---------- PEG ----------
+            if (peg < 0.3)
+              cls = "peg-low";
+            else if (peg < 0.7)
+              cls = "peg-mid";
 
-                    if (colName.includes("PEG")) {
+            return `<span class="badge ${cls}">${peg.toFixed(3)}</span>`;
+          }
+        }
 
-                        const peg = parseFloat(rawValue);
+        // ---------- 股票代號 ----------
+        if (key === "stock_id" || key === "代號") {
+          return `<span class="stock-id">${value}</span>`;
+        }
 
-                        if (!isNaN(peg)) {
+        // ---------- 公司名稱 ----------
+        if (key.includes("公司")) {
+          return `<span class="company-name">${value}</span>`;
+        }
 
-                            let cls = "peg-high";
+        return value;
+      }
+    }));
 
-                            if (peg < 0.3)
-                                cls = "peg-low";
-                            else if (peg < 0.7)
-                                cls = "peg-mid";
+    // ===== 建立 DataTable =====
 
-                            $(this).html(
-                                `<span class="badge ${cls}">${peg.toFixed(3)}</span>`
-                            );
-                        }
-                    }
-
-                    // ---------- true / false ----------
-
-                    if (value === "TRUE") {
-                        $(this).html(
-                            `<span class="badge badge-true">✔ True</span>`
-                        );
-                    }
-
-                    if (value === "FALSE") {
-                        $(this).html(
-                            `<span class="badge badge-false">✘ False</span>`
-                        );
-                    }
-
-                    // ---------- YES / NO ----------
-
-                    if (colName === "In Portfolio?") {
-
-                        if (value === "YES") {
-                            $(this).html(
-                                `<span class="badge badge-true">🟢 YES</span>`
-                            );
-                        }
-                        else {
-                            $(this).html(
-                                `<span class="badge badge-false">🔴 NO</span>`
-                            );
-                        }
-                    }
-
-                    // ---------- 股票代號 ----------
-
-                    if (
-                        colName === "stock_id" ||
-                        colName === "代號"
-                    ) {
-                        $(this).addClass("stock-id");
-                    }
-
-                    // ---------- 公司名稱 ----------
-
-                    if (
-                        colName.includes("公司")
-                    ) {
-                        $(this).addClass("company-name");
-                    }
-
-                });
-            }
-        });
+    table = new DataTable("#stockTable", {
+      data: data,
+      columns: columnsGlobal,
+      pageLength: 50,
+      scrollX: true,
+      autoWidth: false,
+      order: []
     });
+
+  });
+
+// ===== 在庫存篩選 =====
 
 function filterPortfolio(value) {
 
-    if (!table)
-        return;
+  if (!table) return;
 
-    const idx = table.settings()[0].aoColumns.findIndex(
-        c => c.sTitle === "In Portfolio?"
-    );
+  // 找最後一欄（In Portfolio?）
+  const idx = table.columns().count() - 1;
 
-    if (idx < 0)
-        return;
-
+  if (value === "") {
     table.column(idx)
-        .search(value)
-        .draw();
+      .search("")
+      .draw();
+  } else {
+    table.column(idx)
+      .search("^" + value + "$", true, false)
+      .draw();
+  }
 }
