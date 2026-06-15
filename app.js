@@ -193,9 +193,23 @@ fetch("stocks_dashboard.json?t=" + Date.now())
   })
   .catch(err => {
     console.error(err);
+
     document.getElementById("summaryBar").innerHTML =
-      "⚠️ 讀取 stocks_dashboard.json 失敗";
-  });
+      "⚠️ 錯誤：" + err.message;
+
+    document.body.insertAdjacentHTML(
+      "beforeend",
+      `<pre style="
+        color:red;
+        background:#fff0f0;
+        padding:10px;
+        margin:10px;
+        border:1px solid #ccc;
+        white-space:pre-wrap;
+        font-size:14px;
+      ">${err.stack || err}</pre>`
+    );
+});
 
 
 // ===== 在庫存篩選 =====
