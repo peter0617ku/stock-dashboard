@@ -2,17 +2,18 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stock Dashboard</title>
 
     <!-- DataTables -->
     <link rel="stylesheet"
           href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.min.css">
 
-    <!-- 自己的樣式 -->
-    <link rel="stylesheet" href="style.css">
-
+    <!-- jQuery + DataTables -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -21,14 +22,14 @@
 
     <h1>📈 Stock Dashboard</h1>
 
-    <div id="summary" class="summary">
-        載入資料中...
+    <div id="summaryBar" class="summaryBar">
+        Loading...
     </div>
 
-    <div class="button-group">
+    <div class="toolbar">
         <button onclick="filterPortfolio('')">全部</button>
-        <button onclick="filterPortfolio('True')">✅ 在庫存</button>
-        <button onclick="filterPortfolio('False')">❌ 不在庫存</button>
+        <button onclick="filterPortfolio('YES')">✅ 在庫存</button>
+        <button onclick="filterPortfolio('NO')">❌ 不在庫存</button>
     </div>
 
     <table id="stockTable" class="display nowrap" style="width:100%"></table>
