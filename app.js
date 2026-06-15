@@ -27,8 +27,7 @@ fetch("stocks_dashboard.json?t=" + Date.now())
   .then(data => {
 
     if (!data || data.length === 0) {
-      document.getElementById("summaryBar").innerHTML =
-        "⚠️ 沒有資料";
+      document.getElementById("summaryBar").innerHTML = "⚠️ 沒有資料";
       return;
     }
 
@@ -46,36 +45,58 @@ fetch("stocks_dashboard.json?t=" + Date.now())
     // ===== 建立欄位 =====
 
     const columns = columnOrder
-      .filter(col => data[0].hasOwnProperty(col))
+      .filter(col => Object.prototype.hasOwnProperty.call(data[0], col))
       .map(key => ({
 
         title: key,
         data: key,
 
-        render: function (value, type, row) {
+        render: function (value, type) {
+
+          // ---------- YOY ----------
+          if (key === "26年eps yoy" || key === "27年eps yoy") {
+
+            const yoy = parseFloat(value);
+
+            // 排序 / 搜尋使用純數值
+            if (type === "sort" || type === "type" || type === "filter") {
+              return isNaN(yoy) ? -999999 : yoy;
+            }
+
+            if (isNaN(yoy)) return "";
+
+            let cls = "badge";
+
+            if (yoy >= 50) {
+              cls += " badge-true";      // 綠色
+            } else if (yoy >= 0) {
+              cls += " peg-mid";         // 黃色
+            } else {
+              cls += " badge-false";     // 紅色
+            }
+
+            return `<span class="${cls}">${yoy.toFixed(1)}%</span>`;
+          }
 
           // ---------- PEG ----------
           if (key.includes("PEG")) {
 
             const peg = parseFloat(value);
 
-            // 排序使用數值
-            if (type === "sort" || type === "type") {
+            if (type === "sort" || type === "type" || type === "filter") {
               return isNaN(peg) ? 999999 : peg;
             }
 
-            if (!isNaN(peg)) {
-              let cls = "peg-high";
+            if (isNaN(peg)) return "";
 
-              if (peg < 0.3)
-                cls = "peg-low";
-              else if (peg < 0.7)
-                cls = "peg-mid";
+            let cls = "peg-high";
 
-              return `<span class="badge ${cls}">${peg.toFixed(3)}</span>`;
-            }
+            if (peg < 0.3)
+              cls = "peg-low";
+            else if (peg < 0.7)
+              cls = "peg-mid";
 
-            return value;
+            return `<span class="badge ${cls}">${peg.toFixed(3)}</span>`;
           }
 
           // ---------- In Portfolio ----------
@@ -83,14 +104,14 @@ fetch("stocks_dashboard.json?t=" + Date.now())
 
             const v = String(value).trim().toUpperCase();
 
-            if (type === "sort" || type === "filter") {
+            if (type === "sort" || type === "type" || type === "filter") {
               return v;
             }
 
             if (v === "YES") {
-              return '<span class="badge badge-true">✔ YES</span>';
+              return '<span class="badge badge-true">🟢 YES</span>';
             } else {
-              return '<span class="badge badge-false">✘ NO</span>';
+              return '<span class="badge badge-false">🔴 NO</span>';
             }
           }
 
@@ -105,7 +126,7 @@ fetch("stocks_dashboard.json?t=" + Date.now())
               value === true ||
               String(value).toLowerCase() === "true";
 
-            if (type === "sort" || type === "filter") {
+            if (type === "sort" || type === "type" || type === "filter") {
               return boolVal ? 1 : 0;
             }
 
@@ -116,11 +137,31 @@ fetch("stocks_dashboard.json?t=" + Date.now())
             }
           }
 
+          // ---------- 一般數值欄位 ----------
+          if (
+            key === "編號" ||
+            key === "26年eps" ||
+            key === "27年eps" ||
+            key === "26年本益比" ||
+            key === "27年本益比"
+          ) {
+
+            const num = parseFloat(value);
+
+            if (type === "sort" || type === "type" || type === "filter") {
+              return isNaN(num) ? -999999 : num;
+            }
+
+            return value;
+          }
+
           // ---------- stock_id ----------
           if (key === "stock_id") {
 
-            if (type === "sort" || type === "type") {
-              return parseInt(value) || 0;
+            const num = parseInt(value);
+
+            if (type === "sort" || type === "type" || type === "filter") {
+              return isNaN(num) ? 0 : num;
             }
 
             return `<span class="stock-id">${value}</span>`;
@@ -131,24 +172,10 @@ fetch("stocks_dashboard.json?t=" + Date.now())
             return `<span class="company-name">${value}</span>`;
           }
 
-          // ---------- 一般數字欄位 ----------
-          if (
-            key.includes("eps") ||
-            key.includes("本益比") ||
-            key === "編號"
-          ) {
-            const num = parseFloat(
-              String(value).replace("%", "")
-            );
-
-            if (type === "sort" || type === "type") {
-              return isNaN(num) ? -999999 : num;
-            }
-          }
-
           // ---------- 預設 ----------
-          return value;
+          return value ?? "";
         }
+
       }));
 
     // ===== 建立 DataTable =====
@@ -159,7 +186,7 @@ fetch("stocks_dashboard.json?t=" + Date.now())
       pageLength: 100,
       scrollX: true,
       autoWidth: false,
-      order: [],       // 預設不排序
+      order: [],
       destroy: true
     });
 
@@ -167,7 +194,7 @@ fetch("stocks_dashboard.json?t=" + Date.now())
   .catch(err => {
     console.error(err);
     document.getElementById("summaryBar").innerHTML =
-      "⚠️ 讀取資料失敗";
+      "⚠️ 讀取 stocks_dashboard.json 失敗";
   });
 
 
@@ -181,7 +208,7 @@ function filterPortfolio(value) {
     c => c.sTitle === "In Portfolio?"
   );
 
-  if (idx === -1) return;
+  if (idx < 0) return;
 
   if (value === "") {
     table.column(idx)
