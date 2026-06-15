@@ -1,113 +1,139 @@
 let table;
-let allData = [];
+let columnsGlobal = [];
 
 fetch("stocks_dashboard.json?t=" + Date.now())
-  .then(response => response.json())
-  .then(data => {
+    .then(response => response.json())
+    .then(data => {
 
-    allData = data;
+        if (!data || data.length === 0) {
+            document.getElementById("summaryBar").innerHTML =
+                "⚠️ 沒有資料";
+            return;
+        }
 
-    // ====== 摘要資訊 ======
-    const total = data.length;
+        // ===== Summary =====
 
-    const inPortfolio = data.filter(
-      x => String(x["In Portfolio?"]) === "True" || x["In Portfolio?"] === true
-    ).length;
+        const total = data.length;
 
-    const notPortfolio = total - inPortfolio;
+        let portfolioCount = 0;
 
-    document.getElementById("summary").innerHTML =
-      `共 <b>${total}</b> 檔　|　` +
-      `✅ 在庫存 <b>${inPortfolio}</b> 檔　|　` +
-      `❌ 不在庫存 <b>${notPortfolio}</b> 檔`;
+        if (data[0]["In Portfolio?"] !== undefined) {
+            portfolioCount = data.filter(
+                x => String(x["In Portfolio?"]).toUpperCase() === "YES"
+            ).length;
+        }
 
-    // ====== 建立欄位 ======
-    const columns = Object.keys(data[0]).map(key => ({
-      title: key,
-      data: key
-    }));
+        document.getElementById("summaryBar").innerHTML =
+            `📊 共 <b>${total}</b> 檔股票　｜　🟢 在庫存 <b>${portfolioCount}</b> 檔　｜　🔴 不在庫存 <b>${total - portfolioCount}</b> 檔`;
 
-    table = new DataTable('#stockTable', {
-      data: data,
-      columns: columns,
-      pageLength: 50,
-      scrollX: true,
-      order: [],
+        // ===== Columns =====
 
-      createdRow: function (row, rowData) {
+        columnsGlobal = Object.keys(data[0]).map(key => ({
+            title: key,
+            data: key
+        }));
 
-        $("td", row).each(function (index) {
+        table = new DataTable("#stockTable", {
+            data: data,
+            columns: columnsGlobal,
+            pageLength: 50,
+            scrollX: true,
+            order: [],
 
-          const columnName = columns[index].title;
-          const value = rowData[columnName];
+            createdRow: function (row, rowData) {
 
-          // ===== In Portfolio =====
-          if (columnName === "In Portfolio?") {
+                $("td", row).each(function (idx) {
 
-            if (value === true || String(value) === "True") {
-              $(this).html(
-                '<span class="badge badge-true">✔ 在庫存</span>'
-              );
-            } else {
-              $(this).html(
-                '<span class="badge badge-false">✘ 不在庫存</span>'
-              );
+                    const colName = columnsGlobal[idx].title;
+                    const rawValue = rowData[colName];
+                    const value = String(rawValue).trim().toUpperCase();
+
+                    // ---------- PEG ----------
+
+                    if (colName.includes("PEG")) {
+
+                        const peg = parseFloat(rawValue);
+
+                        if (!isNaN(peg)) {
+
+                            let cls = "peg-high";
+
+                            if (peg < 0.3)
+                                cls = "peg-low";
+                            else if (peg < 0.7)
+                                cls = "peg-mid";
+
+                            $(this).html(
+                                `<span class="badge ${cls}">${peg.toFixed(3)}</span>`
+                            );
+                        }
+                    }
+
+                    // ---------- true / false ----------
+
+                    if (value === "TRUE") {
+                        $(this).html(
+                            `<span class="badge badge-true">✔ True</span>`
+                        );
+                    }
+
+                    if (value === "FALSE") {
+                        $(this).html(
+                            `<span class="badge badge-false">✘ False</span>`
+                        );
+                    }
+
+                    // ---------- YES / NO ----------
+
+                    if (colName === "In Portfolio?") {
+
+                        if (value === "YES") {
+                            $(this).html(
+                                `<span class="badge badge-true">🟢 YES</span>`
+                            );
+                        }
+                        else {
+                            $(this).html(
+                                `<span class="badge badge-false">🔴 NO</span>`
+                            );
+                        }
+                    }
+
+                    // ---------- 股票代號 ----------
+
+                    if (
+                        colName === "stock_id" ||
+                        colName === "代號"
+                    ) {
+                        $(this).addClass("stock-id");
+                    }
+
+                    // ---------- 公司名稱 ----------
+
+                    if (
+                        colName.includes("公司")
+                    ) {
+                        $(this).addClass("company-name");
+                    }
+
+                });
             }
-          }
-
-          // ===== PEG 上色 =====
-          if (columnName.includes("PEG")) {
-
-            const peg = parseFloat(value);
-
-            if (!isNaN(peg)) {
-
-              let cls = "peg-high";
-
-              if (peg < 0.3)
-                cls = "peg-low";
-              else if (peg < 0.7)
-                cls = "peg-mid";
-
-              $(this).html(
-                `<span class="badge ${cls}">${peg.toFixed(3)}</span>`
-              );
-            }
-          }
-
-          // ===== 股票代號 =====
-          if (
-            columnName === "代號" ||
-            columnName === "Stock ID" ||
-            columnName === "stock_id"
-          ) {
-            $(this).addClass("stock-id");
-          }
-
-          // ===== 公司名稱 =====
-          if (
-            columnName === "公司" ||
-            columnName === "Company"
-          ) {
-            $(this).addClass("company-name");
-          }
         });
-      }
     });
-  });
 
 function filterPortfolio(value) {
 
-  if (!table) return;
+    if (!table)
+        return;
 
-  const idx = table.settings()[0].aoColumns.findIndex(
-    c => c.sTitle === "In Portfolio?"
-  );
+    const idx = table.settings()[0].aoColumns.findIndex(
+        c => c.sTitle === "In Portfolio?"
+    );
 
-  if (idx === -1) return;
+    if (idx < 0)
+        return;
 
-  table
-    .column(idx)
-    .search(value)
-    .draw();
+    table.column(idx)
+        .search(value)
+        .draw();
 }
