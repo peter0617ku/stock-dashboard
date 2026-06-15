@@ -1,153 +1,174 @@
 body {
-    background: #171b22;
-    color: #e8e8e8;
-    font-family: "Segoe UI", "Noto Sans TC", sans-serif;
     margin: 0;
     padding: 25px;
+    background: #171b22;
+    color: #e6edf3;
+    font-family: "Segoe UI", "Noto Sans TC", sans-serif;
 }
 
 .container {
-    max-width: 98%;
+    width: 98%;
     margin: auto;
 }
 
 h1 {
-    margin-bottom: 12px;
-    font-size: 38px;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 40px;
     font-weight: 700;
 }
 
-.summary {
+.summaryBar {
+    background: #22272e;
+    border: 1px solid #30363d;
+    border-radius: 10px;
+    padding: 12px 18px;
     margin-bottom: 18px;
-    color: #bfc6d1;
     font-size: 16px;
 }
 
-.button-group {
+.toolbar {
     margin-bottom: 18px;
 }
 
 button {
-    background: #2d333b;
+    background: #30363d;
     color: white;
-    border: 1px solid #555;
+    border: 1px solid #484f58;
     border-radius: 8px;
-    padding: 8px 15px;
-    margin-right: 8px;
+    padding: 8px 16px;
+    margin-right: 10px;
     cursor: pointer;
+    transition: 0.15s;
     font-size: 15px;
-    transition: all 0.15s ease;
 }
 
 button:hover {
-    background: #3f4754;
+    background: #3d444d;
     transform: translateY(-1px);
 }
 
-/* ===== DataTable ===== */
-
-table.dataTable {
-    border-collapse: collapse !important;
-    background: #20242c;
-    color: #f0f0f0;
-}
-
-table.dataTable thead th {
-    background: #313846 !important;
-    color: #ffffff !important;
-    font-weight: bold;
-    border-bottom: 1px solid #555 !important;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-}
-
-table.dataTable tbody td {
-    border-bottom: 1px solid #30363d;
-    vertical-align: middle;
-}
-
-table.dataTable tbody tr:nth-child(even) {
-    background: #1d2128;
-}
-
-table.dataTable tbody tr:hover {
-    background: #2d3645 !important;
-}
-
-/* ===== DataTables 深色搜尋框 ===== */
+/* ---------------- DataTables ---------------- */
 
 .dataTables_wrapper {
-    color: #ddd;
+    color: #e6edf3 !important;
+}
+
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_paginate {
+    color: #e6edf3 !important;
+    margin-bottom: 10px;
 }
 
 .dataTables_wrapper input,
 .dataTables_wrapper select {
-    background: #2b313d;
-    color: white;
-    border: 1px solid #555;
+    background: #22272e !important;
+    color: #e6edf3 !important;
+    border: 1px solid #444 !important;
     border-radius: 6px;
-    padding: 5px;
 }
 
-.dataTables_wrapper .dataTables_info,
-.dataTables_wrapper .dataTables_length,
-.dataTables_wrapper .dataTables_filter,
-.dataTables_wrapper .dataTables_paginate {
-    color: #ddd !important;
+table.dataTable {
+    background: #22272e !important;
+    color: #e6edf3 !important;
+    border-collapse: collapse !important;
 }
 
-/* ===== Badge ===== */
+table.dataTable thead th {
+    background: #2d333b !important;
+    color: #ffffff !important;
+    border-bottom: 1px solid #444 !important;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    font-weight: bold;
+}
+
+table.dataTable tbody td {
+    border-bottom: 1px solid #30363d !important;
+    vertical-align: middle;
+}
+
+table.dataTable tbody tr:nth-child(even) {
+    background: #1f242b !important;
+}
+
+table.dataTable tbody tr:hover {
+    background: #313846 !important;
+}
+
+/* ---------------- Badge ---------------- */
 
 .badge {
     display: inline-block;
     min-width: 75px;
     padding: 5px 10px;
     border-radius: 999px;
-    font-weight: bold;
     text-align: center;
+    font-weight: 700;
+    font-size: 13px;
 }
 
-/* 在庫存 */
-
 .badge-true {
-    background: #1f8b4c;
+    background: #238636;
     color: white;
 }
 
 .badge-false {
-    background: #c0392b;
+    background: #da3633;
     color: white;
 }
 
-/* PEG */
+/* ---------------- PEG ---------------- */
 
 .peg-low {
-    background: #239b56;
+    background: #1f883d;
     color: white;
 }
 
 .peg-mid {
-    background: #f4d03f;
+    background: #d29922;
     color: black;
 }
 
 .peg-high {
-    background: #cb4335;
+    background: #da3633;
     color: white;
 }
 
-/* 股票代號 */
+/* ---------------- 股票代號 ---------------- */
 
 .stock-id {
-    font-weight: bold;
-    color: #6cb6ff;
-    font-size: 15px;
+    font-weight: 700;
+    color: #58a6ff;
 }
 
-/* 公司名稱 */
+/* ---------------- 公司名稱 ---------------- */
 
 .company-name {
     font-weight: 600;
     color: #ffffff;
+}
+
+/* ---------------- 手機板 ---------------- */
+
+@media (max-width: 768px) {
+
+    body {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 28px;
+    }
+
+    .summaryBar {
+        font-size: 14px;
+    }
+
+    button {
+        margin-bottom: 8px;
+    }
 }
