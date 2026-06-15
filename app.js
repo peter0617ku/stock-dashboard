@@ -183,7 +183,8 @@ fetch("stocks_dashboard.json?t=" + Date.now())
     table = new DataTable("#stockTable", {
       data: data,
       columns: columns,
-      pageLength: 100,
+      pageLength: 200,
+      lengthMenu: [25, 50, 100, 200], // 👈 新增這行來指定選單內容
       scrollX: true,
       autoWidth: false,
       order: [],
