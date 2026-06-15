@@ -1,1 +1,125 @@
+body {
+    font-family: "Segoe UI", "Noto Sans TC", Arial, sans-serif;
+    background: #181a20;
+    color: #e8e8e8;
+    margin: 30px;
+}
 
+h1 {
+    margin-bottom: 20px;
+    font-size: 34px;
+    font-weight: 700;
+}
+
+button {
+    background: #2d313a;
+    color: white;
+    border: 1px solid #555;
+    padding: 8px 14px;
+    margin-right: 8px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 15px;
+}
+
+button:hover {
+    background: #4b5563;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #22252c;
+    border-radius: 10px;
+    overflow: hidden;
+    font-size: 14px;
+}
+
+thead {
+    background: #313540;
+}
+
+th {
+    padding: 12px 10px;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+th:hover {
+    background: #444b5a;
+}
+
+td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #333;
+}
+
+tbody tr:hover {
+    background: #2c3038;
+}
+
+tbody tr:nth-child(even) {
+    background: #252932;
+}
+
+.badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-weight: bold;
+    min-width: 55px;
+}
+
+/* True / False */
+.badge-true {
+    background: #1f7a3f;
+    color: white;
+}
+
+.badge-false {
+    background: #a12828;
+    color: white;
+}
+
+/* PEG 顏色 */
+.peg-low {
+    background: #1f7a3f;
+    color: white;
+    font-weight: bold;
+}
+
+.peg-mid {
+    background: #d6a400;
+    color: black;
+    font-weight: bold;
+}
+
+.peg-high {
+    background: #b12b2b;
+    color: white;
+    font-weight: bold;
+}
+
+/* 股票代號 */
+.stock-id {
+    font-weight: bold;
+    color: #7ec8ff;
+}
+
+/* 公司名稱 */
+.company {
+    font-weight: 600;
+}
+
+/* 券商 */
+.broker {
+    color: #bbbbbb;
+    font-size: 13px;
+}
