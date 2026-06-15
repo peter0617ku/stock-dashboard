@@ -32,7 +32,6 @@ fetch("stocks_dashboard.json?t=" + Date.now())
     }
 
     // ===== Summary =====
-
     const total = data.length;
 
     const portfolioCount = data.filter(
@@ -43,7 +42,6 @@ fetch("stocks_dashboard.json?t=" + Date.now())
       `📊 共 <b>${total}</b> 檔股票　｜　🟢 在庫存 <b>${portfolioCount}</b> 檔　｜　🔴 不在庫存 <b>${total - portfolioCount}</b> 檔`;
 
     // ===== 建立欄位 =====
-
     const columns = columnOrder
       .filter(col => Object.prototype.hasOwnProperty.call(data[0], col))
       .map(key => ({
@@ -55,27 +53,30 @@ fetch("stocks_dashboard.json?t=" + Date.now())
 
           // ---------- YOY ----------
           if (key === "26年eps yoy" || key === "27年eps yoy") {
+            
+            // 安全防禦：若資料為空或 null，直接回傳空字串
+            if (value === null || value === undefined || value === "") return "";
 
-            const yoy = parseFloat(value);
+            const yoyVal = parseFloat(value);
 
             // 排序 / 搜尋使用純數值
             if (type === "sort" || type === "type" || type === "filter") {
-              return isNaN(yoy) ? -999999 : yoy;
+              return isNaN(yoyVal) ? -999999 : yoyVal;
             }
 
-            if (isNaN(yoy)) return "";
+            if (isNaN(yoyVal)) return "";
 
             let cls = "badge";
 
-            if (yoy >= 50) {
+            if (yoyVal >= 50) {
               cls += " badge-true";      // 綠色
-            } else if (yoy >= 0) {
+            } else if (yoyVal >= 0) {
               cls += " peg-mid";         // 黃色
             } else {
               cls += " badge-false";     // 紅色
             }
 
-            return `<span class="${cls}">${yoy.toFixed(1)}%</span>`;
+            return `<span class="${cls}">${yoyVal.toFixed(1)}%</span>`;
           }
 
           // ---------- PEG ----------
@@ -179,7 +180,6 @@ fetch("stocks_dashboard.json?t=" + Date.now())
       }));
 
     // ===== 建立 DataTable =====
-
     table = new DataTable("#stockTable", {
       data: data,
       columns: columns,
@@ -209,11 +209,10 @@ fetch("stocks_dashboard.json?t=" + Date.now())
         font-size:14px;
       ">${err.stack || err}</pre>`
     );
-});
+  });
 
 
 // ===== 在庫存篩選 =====
-
 function filterPortfolio(value) {
 
   if (!table) return;
