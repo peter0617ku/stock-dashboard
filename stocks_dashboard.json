@@ -114,7 +114,7 @@
     "27年本益比": 15.0,
     "27年PEG": 0.135,
     "above_ma20": false,
-    "above_ma60": true,
+    "above_ma60": false,
     "above_ma120": false,
     "above_ma240": false,
     "In Portfolio?": "YES"
@@ -137,7 +137,7 @@
     "above_ma60": true,
     "above_ma120": true,
     "above_ma240": true,
-    "In Portfolio?": "YES"
+    "In Portfolio?": "NO"
   },
   {
     "編號": 333,
@@ -157,7 +157,7 @@
     "above_ma60": true,
     "above_ma120": true,
     "above_ma240": true,
-    "In Portfolio?": "YES"
+    "In Portfolio?": "NO"
   },
   {
     "編號": 261,
@@ -214,8 +214,8 @@
     "27年本益比": 14.0,
     "27年PEG": 0.367,
     "above_ma20": false,
-    "above_ma60": true,
-    "above_ma120": true,
+    "above_ma60": false,
+    "above_ma120": false,
     "above_ma240": true,
     "In Portfolio?": "YES"
   },
@@ -233,7 +233,7 @@
     "27年eps yoy": 53.2,
     "27年本益比": 25.8,
     "27年PEG": 0.485,
-    "above_ma20": true,
+    "above_ma20": false,
     "above_ma60": false,
     "above_ma120": true,
     "above_ma240": true,
@@ -260,24 +260,24 @@
     "In Portfolio?": "YES"
   },
   {
-    "編號": 255,
-    "報告日期": "2026/05/11",
-    "投顧機構": "富邦投顧",
-    "公司名稱": "南電",
-    "stock_id": "8046",
-    "26年eps": 12.85,
-    "26年eps yoy": 326.0,
-    "26年本益比": 70.6,
-    "26年PEG": 0.217,
-    "27年eps": 26.26,
-    "27年eps yoy": 104.0,
-    "27年本益比": 34.6,
-    "27年PEG": 0.333,
+    "編號": 308,
+    "報告日期": "2026/05/25",
+    "投顧機構": "元大投顧",
+    "公司名稱": "三福化",
+    "stock_id": "4755",
+    "26年eps": 7.17,
+    "26年eps yoy": 94.0,
+    "26年本益比": 21.3,
+    "26年PEG": 0.227,
+    "27年eps": 9.43,
+    "27年eps yoy": 31.5,
+    "27年本益比": 16.2,
+    "27年PEG": 0.514,
     "above_ma20": false,
-    "above_ma60": true,
+    "above_ma60": false,
     "above_ma120": true,
     "above_ma240": true,
-    "In Portfolio?": "YES"
+    "In Portfolio?": "NO"
   },
   {
     "編號": 247,
@@ -293,7 +293,7 @@
     "27年eps yoy": 67.3,
     "27年本益比": 25.6,
     "27年PEG": 0.38,
-    "above_ma20": true,
+    "above_ma20": false,
     "above_ma60": false,
     "above_ma120": true,
     "above_ma240": true,
@@ -373,6 +373,26 @@
     "27年eps yoy": 46.6,
     "27年本益比": 21.9,
     "27年PEG": 0.47,
+    "above_ma20": false,
+    "above_ma60": true,
+    "above_ma120": true,
+    "above_ma240": true,
+    "In Portfolio?": "YES"
+  },
+  {
+    "編號": 209,
+    "報告日期": "2026/04/28",
+    "投顧機構": "凱基投顧",
+    "公司名稱": "欣興",
+    "stock_id": "3037",
+    "26年eps": 14.31,
+    "26年eps yoy": 226.6,
+    "26年本益比": 57.7,
+    "26年PEG": 0.255,
+    "27年eps": 27.77,
+    "27年eps yoy": 94.1,
+    "27年本益比": 29.7,
+    "27年PEG": 0.316,
     "above_ma20": false,
     "above_ma60": true,
     "above_ma120": true,
@@ -460,26 +480,6 @@
     "In Portfolio?": "YES"
   },
   {
-    "編號": 251,
-    "報告日期": "2026/05/11",
-    "投顧機構": "富邦投顧",
-    "公司名稱": "世芯電子",
-    "stock_id": "3661",
-    "26年eps": 143.79,
-    "26年eps yoy": 108.8,
-    "26年本益比": 34.0,
-    "26年PEG": 0.312,
-    "27年eps": 186.22,
-    "27年eps yoy": 29.5,
-    "27年本益比": 26.3,
-    "27年PEG": 0.892,
-    "above_ma20": false,
-    "above_ma60": true,
-    "above_ma120": true,
-    "above_ma240": true,
-    "In Portfolio?": "YES"
-  },
-  {
     "編號": 225,
     "報告日期": "2026/05/08",
     "投顧機構": "凱基投顧",
@@ -494,8 +494,8 @@
     "27年本益比": 11.4,
     "27年PEG": 0.679,
     "above_ma20": false,
-    "above_ma60": true,
-    "above_ma120": true,
+    "above_ma60": false,
+    "above_ma120": false,
     "above_ma240": true,
     "In Portfolio?": "YES"
   },
@@ -514,8 +514,8 @@
     "27年本益比": 11.4,
     "27年PEG": 0.679,
     "above_ma20": false,
-    "above_ma60": true,
-    "above_ma120": true,
+    "above_ma60": false,
+    "above_ma120": false,
     "above_ma240": true,
     "In Portfolio?": "YES"
   },
@@ -537,7 +537,7 @@
     "above_ma60": true,
     "above_ma120": true,
     "above_ma240": true,
-    "In Portfolio?": "NO"
+    "In Portfolio?": "YES"
   },
   {
     "編號": 249,
@@ -557,7 +557,7 @@
     "above_ma60": true,
     "above_ma120": true,
     "above_ma240": true,
-    "In Portfolio?": "NO"
+    "In Portfolio?": "YES"
   },
   {
     "編號": 290,
@@ -620,6 +620,26 @@
     "In Portfolio?": "YES"
   },
   {
+    "編號": 270,
+    "報告日期": "2026/05/15",
+    "投顧機構": "富邦投顧",
+    "公司名稱": "金像電",
+    "stock_id": "2368",
+    "26年eps": 36.38,
+    "26年eps yoy": 96.6,
+    "26年本益比": 35.5,
+    "26年PEG": 0.367,
+    "27年eps": 64.22,
+    "27年eps yoy": 76.6,
+    "27年本益比": 20.1,
+    "27年PEG": 0.262,
+    "above_ma20": false,
+    "above_ma60": false,
+    "above_ma120": true,
+    "above_ma240": true,
+    "In Portfolio?": "YES"
+  },
+  {
     "編號": 216,
     "報告日期": "2026/05/05",
     "投顧機構": "凱基投顧",
@@ -675,7 +695,7 @@
     "27年PEG": 0.517,
     "above_ma20": false,
     "above_ma60": false,
-    "above_ma120": true,
+    "above_ma120": false,
     "above_ma240": false,
     "In Portfolio?": "YES"
   },
@@ -693,7 +713,7 @@
     "27年eps yoy": 27.9,
     "27年本益比": 8.5,
     "27年PEG": 0.305,
-    "above_ma20": true,
+    "above_ma20": false,
     "above_ma60": false,
     "above_ma120": true,
     "above_ma240": true,
@@ -717,7 +737,7 @@
     "above_ma60": true,
     "above_ma120": true,
     "above_ma240": true,
-    "In Portfolio?": "NO"
+    "In Portfolio?": "YES"
   },
   {
     "編號": 226,
@@ -780,21 +800,21 @@
     "In Portfolio?": "YES"
   },
   {
-    "編號": 222,
-    "報告日期": "2026/05/08",
+    "編號": 286,
+    "報告日期": "2026/05/15",
     "投顧機構": "凱基投顧",
-    "公司名稱": "世芯-KY",
-    "stock_id": "3661",
-    "26年eps": 128.95,
-    "26年eps yoy": 86.4,
-    "26年本益比": 37.9,
-    "26年PEG": 0.439,
-    "27年eps": 171.78,
-    "27年eps yoy": 33.2,
-    "27年本益比": 28.5,
-    "27年PEG": 0.858,
+    "公司名稱": "金像電",
+    "stock_id": "2368",
+    "26年eps": 35.31,
+    "26年eps yoy": 81.2,
+    "26年本益比": 36.5,
+    "26年PEG": 0.45,
+    "27年eps": 55.21,
+    "27年eps yoy": 56.4,
+    "27年本益比": 23.4,
+    "27年PEG": 0.415,
     "above_ma20": false,
-    "above_ma60": true,
+    "above_ma60": false,
     "above_ma120": true,
     "above_ma240": true,
     "In Portfolio?": "YES"
@@ -817,7 +837,7 @@
     "above_ma60": true,
     "above_ma120": true,
     "above_ma240": true,
-    "In Portfolio?": "NO"
+    "In Portfolio?": "YES"
   },
   {
     "編號": 227,
@@ -836,7 +856,7 @@
     "above_ma20": false,
     "above_ma60": true,
     "above_ma120": true,
-    "above_ma240": true,
+    "above_ma240": false,
     "In Portfolio?": "YES"
   },
   {
@@ -875,6 +895,26 @@
     "27年PEG": 0.471,
     "above_ma20": false,
     "above_ma60": false,
+    "above_ma120": false,
+    "above_ma240": true,
+    "In Portfolio?": "YES"
+  },
+  {
+    "編號": 217,
+    "報告日期": "2026/05/06",
+    "投顧機構": "凱基投顧",
+    "公司名稱": "研華",
+    "stock_id": "2395",
+    "26年eps": 17.81,
+    "26年eps yoy": 45.4,
+    "26年本益比": 23.0,
+    "26年PEG": 0.507,
+    "27年eps": 24.11,
+    "27年eps yoy": 35.4,
+    "27年本益比": 17.0,
+    "27年PEG": 0.48,
+    "above_ma20": false,
+    "above_ma60": true,
     "above_ma120": true,
     "above_ma240": true,
     "In Portfolio?": "YES"
@@ -917,7 +957,7 @@
     "above_ma60": true,
     "above_ma120": true,
     "above_ma240": true,
-    "In Portfolio?": "NO"
+    "In Portfolio?": "YES"
   },
   {
     "編號": 234,
@@ -937,7 +977,7 @@
     "above_ma60": true,
     "above_ma120": true,
     "above_ma240": true,
-    "In Portfolio?": "NO"
+    "In Portfolio?": "YES"
   },
   {
     "編號": 243,
@@ -953,6 +993,26 @@
     "27年eps yoy": 54.3,
     "27年本益比": 31.8,
     "27年PEG": 0.586,
+    "above_ma20": false,
+    "above_ma60": true,
+    "above_ma120": true,
+    "above_ma240": true,
+    "In Portfolio?": "YES"
+  },
+  {
+    "編號": 316,
+    "報告日期": "2026/05/29",
+    "投顧機構": "富邦投顧",
+    "公司名稱": "昇陽半導體",
+    "stock_id": "8028",
+    "26年eps": 7.69,
+    "26年eps yoy": 76.0,
+    "26年本益比": 43.5,
+    "26年PEG": 0.572,
+    "27年eps": 11.4,
+    "27年eps yoy": 48.2,
+    "27年本益比": 29.3,
+    "27年PEG": 0.608,
     "above_ma20": false,
     "above_ma60": true,
     "above_ma120": true,
@@ -975,9 +1035,9 @@
     "27年PEG": 0.148,
     "above_ma20": true,
     "above_ma60": true,
-    "above_ma120": true,
+    "above_ma120": false,
     "above_ma240": false,
-    "In Portfolio?": "NO"
+    "In Portfolio?": "YES"
   },
   {
     "編號": 285,
@@ -993,11 +1053,31 @@
     "27年eps yoy": 12.5,
     "27年本益比": 10.0,
     "27年PEG": 0.8,
-    "above_ma20": true,
+    "above_ma20": false,
     "above_ma60": false,
     "above_ma120": true,
     "above_ma240": true,
     "In Portfolio?": "NO"
+  },
+  {
+    "編號": 244,
+    "報告日期": "2026/05/05",
+    "投顧機構": "富邦投顧",
+    "公司名稱": "順達",
+    "stock_id": "3211",
+    "26年eps": 13.21,
+    "26年eps yoy": 45.8,
+    "26年本益比": 27.4,
+    "26年PEG": 0.598,
+    "27年eps": 23.07,
+    "27年eps yoy": 74.6,
+    "27年本益比": 15.7,
+    "27年PEG": 0.21,
+    "above_ma20": false,
+    "above_ma60": true,
+    "above_ma120": true,
+    "above_ma240": true,
+    "In Portfolio?": "YES"
   },
   {
     "編號": 326,
@@ -1017,7 +1097,7 @@
     "above_ma60": true,
     "above_ma120": true,
     "above_ma240": true,
-    "In Portfolio?": "NO"
+    "In Portfolio?": "YES"
   },
   {
     "編號": 246,
@@ -1054,7 +1134,7 @@
     "27年本益比": 19.4,
     "27年PEG": 0.322,
     "above_ma20": false,
-    "above_ma60": true,
+    "above_ma60": false,
     "above_ma120": true,
     "above_ma240": true,
     "In Portfolio?": "YES"
@@ -1100,6 +1180,26 @@
     "In Portfolio?": "YES"
   },
   {
+    "編號": 203,
+    "報告日期": "2026/04/29",
+    "投顧機構": "凱基投顧",
+    "公司名稱": "光寶科",
+    "stock_id": "2301",
+    "26年eps": 8.55,
+    "26年eps yoy": 28.7,
+    "26年本益比": 20.1,
+    "26年PEG": 0.7,
+    "27年eps": 12.37,
+    "27年eps yoy": 44.6,
+    "27年本益比": 13.9,
+    "27年PEG": 0.312,
+    "above_ma20": false,
+    "above_ma60": true,
+    "above_ma120": true,
+    "above_ma240": true,
+    "In Portfolio?": "YES"
+  },
+  {
     "編號": 303,
     "報告日期": "2026/05/19",
     "投顧機構": "凱基投顧",
@@ -1135,6 +1235,26 @@
     "27年PEG": 0.531,
     "above_ma20": false,
     "above_ma60": false,
+    "above_ma120": true,
+    "above_ma240": true,
+    "In Portfolio?": "YES"
+  },
+  {
+    "編號": 294,
+    "報告日期": "2026/05/19",
+    "投顧機構": "富邦投顧",
+    "公司名稱": "鈊象",
+    "stock_id": "3293",
+    "26年eps": 46.2,
+    "26年eps yoy": 20.0,
+    "26年本益比": 15.5,
+    "26年PEG": 0.775,
+    "27年eps": 52.7,
+    "27年eps yoy": 14.1,
+    "27年本益比": 13.6,
+    "27年PEG": 0.965,
+    "above_ma20": false,
+    "above_ma60": true,
     "above_ma120": true,
     "above_ma240": true,
     "In Portfolio?": "YES"
@@ -1194,9 +1314,29 @@
     "27年本益比": 11.8,
     "27年PEG": 0.349,
     "above_ma20": false,
-    "above_ma60": true,
+    "above_ma60": false,
     "above_ma120": true,
     "above_ma240": true,
+    "In Portfolio?": "YES"
+  },
+  {
+    "編號": 215,
+    "報告日期": "2026/05/06",
+    "投顧機構": "凱基投顧",
+    "公司名稱": "AES-KY",
+    "stock_id": "6781",
+    "26年eps": 49.2,
+    "26年eps yoy": 28.8,
+    "26年本益比": 23.2,
+    "26年PEG": 0.806,
+    "27年eps": 66.78,
+    "27年eps yoy": 35.7,
+    "27年本益比": 17.1,
+    "27年PEG": 0.479,
+    "above_ma20": true,
+    "above_ma60": true,
+    "above_ma120": true,
+    "above_ma240": false,
     "In Portfolio?": "YES"
   },
   {
@@ -1233,9 +1373,9 @@
     "27年eps yoy": 19.3,
     "27年本益比": 10.9,
     "27年PEG": 0.565,
-    "above_ma20": true,
+    "above_ma20": false,
     "above_ma60": true,
-    "above_ma120": true,
+    "above_ma120": false,
     "above_ma240": false,
     "In Portfolio?": "NO"
   },
@@ -1254,7 +1394,7 @@
     "27年本益比": 11.2,
     "27年PEG": 0.329,
     "above_ma20": false,
-    "above_ma60": true,
+    "above_ma60": false,
     "above_ma120": true,
     "above_ma240": true,
     "In Portfolio?": "YES"
@@ -1334,7 +1474,7 @@
     "27年本益比": 11.0,
     "27年PEG": 0.295,
     "above_ma20": false,
-    "above_ma60": true,
+    "above_ma60": false,
     "above_ma120": true,
     "above_ma240": true,
     "In Portfolio?": "YES"
@@ -1400,6 +1540,26 @@
     "In Portfolio?": "NO"
   },
   {
+    "編號": 332,
+    "報告日期": "2026/06/17",
+    "投顧機構": "富邦投顧",
+    "公司名稱": "京鼎",
+    "stock_id": "3413",
+    "26年eps": 24.3,
+    "26年eps yoy": 13.4,
+    "26年本益比": 13.4,
+    "26年PEG": 1.0,
+    "27年eps": 29.94,
+    "27年eps yoy": 23.2,
+    "27年本益比": 10.9,
+    "27年PEG": 0.47,
+    "above_ma20": false,
+    "above_ma60": false,
+    "above_ma120": true,
+    "above_ma240": true,
+    "In Portfolio?": "YES"
+  },
+  {
     "編號": 311,
     "報告日期": "2026/05/29",
     "投顧機構": "元大投顧",
@@ -1416,7 +1576,7 @@
     "above_ma20": false,
     "above_ma60": true,
     "above_ma120": true,
-    "above_ma240": true,
+    "above_ma240": false,
     "In Portfolio?": "YES"
   },
   {
@@ -1474,7 +1634,7 @@
     "27年本益比": 11.0,
     "27年PEG": 0.547,
     "above_ma20": true,
-    "above_ma60": true,
+    "above_ma60": false,
     "above_ma120": false,
     "above_ma240": false,
     "In Portfolio?": "YES"
