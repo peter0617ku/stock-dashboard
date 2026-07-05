@@ -1053,7 +1053,7 @@
     "27年eps yoy": 59.2,
     "27年本益比": 25.6,
     "27年PEG": 0.432,
-    "above_ma20": null,
+    "above_ma20": false,
     "above_ma60": false,
     "above_ma120": true,
     "above_ma240": true,
