@@ -15,6 +15,7 @@ const columnOrder = [
   "27年eps yoy",
   "27年本益比",
   "27年PEG",
+  "投資價值分數",
   "above_ma20",
   "above_ma60",
   "above_ma120",
@@ -77,6 +78,32 @@ fetch("stocks_dashboard.json?t=" + Date.now())
             }
 
             return `<span class="${cls}">${yoyVal.toFixed(1)}%</span>`;
+          }
+
+          // ---------- 投資價值分數 ----------
+          if (key === "投資價值分數") {
+
+            if (value === null || value === undefined || value === "") return "";
+
+            const score = parseFloat(value);
+
+            if (type === "sort" || type === "type" || type === "filter") {
+              return isNaN(score) ? -999999 : score;
+            }
+
+            if (isNaN(score)) return "";
+
+            let cls = "badge";
+
+            if (score >= 65) {
+              cls += " badge-true";      // 綠色：分數高
+            } else if (score >= 35) {
+              cls += " peg-mid";         // 黃色：中等
+            } else {
+              cls += " badge-false";     // 紅色：分數低
+            }
+
+            return `<span class="${cls}">${score.toFixed(1)}</span>`;
           }
 
           // ---------- PEG ----------
