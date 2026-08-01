@@ -16,12 +16,19 @@ const columnOrder = [
   "27年本益比",
   "27年PEG",
   "投資價值分數",
+  "Price(Est)",
+  "ref_price",
   "above_ma20",
   "above_ma60",
   "above_ma120",
   "above_ma240",
   "In Portfolio?"
 ];
+
+// ===== 欄位顯示名稱對照 =====
+const columnTitleMap = {
+  "ref_price": "Ref Price"
+};
 
 fetch("stocks_dashboard.json?t=" + Date.now())
   .then(response => response.json())
@@ -47,10 +54,53 @@ fetch("stocks_dashboard.json?t=" + Date.now())
       .filter(col => Object.prototype.hasOwnProperty.call(data[0], col))
       .map(key => ({
 
-        title: key,
+        title: columnTitleMap[key] || key,
         data: key,
 
-        render: function (value, type) {
+        render: function (value, type, row) {
+
+          // ---------- Price(Est) ----------
+          if (key === "Price(Est)") {
+
+            if (value === null || value === undefined || value === "") return "";
+
+            const priceEst = parseFloat(value);
+
+            if (type === "sort" || type === "type" || type === "filter") {
+              return isNaN(priceEst) ? -999999 : priceEst;
+            }
+
+            if (isNaN(priceEst)) return "";
+
+            return priceEst.toFixed(2);
+          }
+
+          // ---------- ref_price ----------
+          if (key === "ref_price") {
+
+            if (value === null || value === undefined || value === "") return "";
+
+            const ref = parseFloat(value);
+
+            if (type === "sort" || type === "type" || type === "filter") {
+              return isNaN(ref) ? -999999 : ref;
+            }
+
+            if (isNaN(ref)) return "";
+
+            const priceEst = parseFloat(row["Price(Est)"]);
+
+            let cls = "badge";
+            if (!isNaN(priceEst)) {
+              if (ref > priceEst) {
+                cls += " badge-true";      // 綠色：高於 Price(Est)
+              } else if (ref < priceEst) {
+                cls += " badge-false";     // 紅色：低於 Price(Est)
+              }
+            }
+
+            return `<span class="${cls}">${ref.toFixed(2)}</span>`;
+          }
 
           // ---------- YOY ----------
           if (key === "26年eps yoy" || key === "27年eps yoy") {
