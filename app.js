@@ -10,10 +10,12 @@ const columnOrder = [
   "26年eps",
   "26年eps yoy",
   "26年本益比",
+  "26年本益比(修正)",
   "26年PEG",
   "27年eps",
   "27年eps yoy",
   "27年本益比",
+  "27年本益比(修正)",
   "27年PEG",
   "投資價值分數",
   "Price(Est)",
@@ -27,7 +29,9 @@ const columnOrder = [
 
 // ===== 欄位顯示名稱對照 =====
 const columnTitleMap = {
-  "ref_price": "Ref Price"
+  "ref_price": "Ref Price",
+  "26年本益比(修正)": "26年本益比(修正)",
+  "27年本益比(修正)": "27年本益比(修正)"
 };
 
 fetch("stocks_dashboard.json?t=" + Date.now())
@@ -100,6 +104,35 @@ fetch("stocks_dashboard.json?t=" + Date.now())
             }
 
             return `<span class="${cls}">${ref.toFixed(2)}</span>`;
+          }
+
+          // ---------- 本益比(修正) ----------
+          if (key.includes("本益比(修正)")) {
+
+            if (value === null || value === undefined || value === "") return "";
+
+            const adjPe = parseFloat(value);
+
+            if (type === "sort" || type === "type" || type === "filter") {
+              return isNaN(adjPe) ? -999999 : adjPe;
+            }
+
+            if (isNaN(adjPe)) return "";
+
+            // 對應的原始本益比欄位，例如 "26年本益比(修正)" -> "26年本益比"
+            const rawKey = key.replace("(修正)", "");
+            const rawPe = parseFloat(row[rawKey]);
+
+            let cls = "badge";
+            if (!isNaN(rawPe)) {
+              if (adjPe < rawPe) {
+                cls += " badge-true";      // 綠色：修正後本益比變低（相對變便宜）
+              } else if (adjPe > rawPe) {
+                cls += " badge-false";     // 紅色：修正後本益比變高（相對變貴）
+              }
+            }
+
+            return `<span class="${cls}">${adjPe.toFixed(2)}</span>`;
           }
 
           // ---------- YOY ----------
