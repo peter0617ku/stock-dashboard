@@ -1,42 +1,615 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stock Dashboard</title>
+    <title>持股分析 Dashboard</title>
+    <style>
+        :root {
+            --bg-color: #f5f6f8;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --sub-text: #666666;
+            --border-color: #e0e0e0;
+            --th-bg: #2c3e50;
+            --th-color: #ffffff;
+            --hover-bg: #f1f3f5;
+        }
 
-    <!-- DataTables -->
-    <link rel="stylesheet"
-          href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.min.css">
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --card-bg: #2d2d2d;
+            --text-color: #e0e0e0;
+            --sub-text: #aaa;
+            --border-color: #444;
+            --th-bg: #111827;
+            --th-color: #f3f4f6;
+            --hover-bg: #374151;
+        }
 
-    <!-- jQuery + DataTables -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
 
-    <link rel="stylesheet" href="style.css">
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        h1 { margin: 0; font-size: 1.8rem; }
+        .meta-info { color: var(--sub-text); font-size: 0.9rem; margin-top: 5px; }
+
+        .controls-card {
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .control-group label {
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: var(--sub-text);
+        }
+
+        select, input[type="text"] {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+
+        .btn-theme {
+            padding: 8px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            cursor: pointer;
+            margin-left: auto;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background-color: var(--th-bg);
+            color: var(--th-color);
+            padding: 12px 10px;
+            text-align: center;
+            cursor: pointer;
+            position: sticky;
+            top: 0;
+            user-select: none;
+        }
+
+        th:hover { opacity: 0.9; }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        tr:hover { background-color: var(--hover-bg); }
+
+        /* 損益/分數/金額 漸層 Class */
+        .pnl-deep-red { background-color: rgba(239, 68, 68, 0.4); color: #fff; }
+        .pnl-light-red { background-color: rgba(254, 202, 202, 0.5); }
+        .pnl-light-green { background-color: rgba(187, 247, 208, 0.5); }
+        .pnl-deep-green { background-color: rgba(34, 197, 94, 0.4); color: #fff; }
+
+        .score-low { background-color: rgba(229, 231, 235, 0.3); }
+        .score-mid { background-color: rgba(253, 224, 71, 0.4); }
+        .score-high { background-color: rgba(249, 115, 22, 0.5); font-weight: bold; }
+
+        .inv-tier1 { background-color: rgba(243, 244, 246, 0.5); }
+        .inv-tier2 { background-color: rgba(219, 234, 254, 0.5); }
+        .inv-tier3 { background-color: rgba(191, 219, 254, 0.7); }
+        .inv-tier4 { background-color: rgba(147, 197, 253, 0.9); font-weight: bold; }
+
+        /* PE 比對專用顏色 */
+        .pe-green { background-color: rgba(187, 247, 208, 0.6); } /* 括號內 < 括號外 (淺綠) */
+        .pe-red { background-color: rgba(254, 202, 202, 0.6); }   /* 括號內 > 括號外 (淺紅) */
+
+        /* P&L 相對 26 EPS 成長的達成進度 */
+        .progress-cell {
+            min-width: 150px;
+        }
+        .progress-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 145px;
+        }
+        .progress-track {
+            flex: 1;
+            height: 10px;
+            background: var(--border-color);
+            border-radius: 999px;
+            overflow: hidden;
+            min-width: 70px;
+        }
+        .progress-bar {
+            height: 100%;
+            border-radius: 999px;
+            transition: width 0.25s ease;
+        }
+        .progress-normal {
+            background: #86efac;
+        }
+        .progress-near {
+            background: #facc15;
+        }
+        .progress-reached {
+            background: #fb923c;
+        }
+        .progress-over {
+            background: #ef4444;
+        }
+        .progress-text {
+            font-size: 0.78rem;
+            font-weight: 700;
+            min-width: 48px;
+            text-align: right;
+        }
+        .progress-negative { background: #60a5fa; }
+        .progress-detail {
+            font-size: 0.72rem;
+            color: var(--sub-text);
+            margin-top: 2px;
+        }
+    </style>
 </head>
-
 <body>
 
-<div class="container">
-
-    <h1>📈 Stock Dashboard</h1>
-
-    <div id="summaryBar" class="summaryBar">
-        Loading...
+<div class="header-container">
+    <div>
+        <h1>📊 持股分析 Dashboard</h1>
+        <div class="meta-info" id="updated">讀取中...</div>
     </div>
-
-    <div class="toolbar">
-        <button onclick="filterPortfolio('')">全部</button>
-        <button onclick="filterPortfolio('YES')">✅ 在庫存</button>
-        <button onclick="filterPortfolio('NO')">❌ 不在庫存</button>
-    </div>
-
-    <table id="stockTable" class="display nowrap" style="width:100%"></table>
-
+    <button class="btn-theme" onclick="toggleTheme()">🌓 切換主題</button>
 </div>
 
-<script src="app.js"></script>
+<div class="controls-card">
+    <div class="control-group">
+        <label>🔍 搜尋</label>
+        <input type="text" id="search" placeholder="股票代號 / 名稱...">
+    </div>
+
+    <div class="control-group">
+        <label>損益</label>
+        <select id="filterPnl">
+            <option value="all">全部</option>
+            <option value="pos">正損益</option>
+            <option value="neg">負損益</option>
+        </select>
+    </div>
+
+    <div class="control-group">
+        <label>目前投入 (TWD)</label>
+        <select id="filterInvest">
+            <option value="all">全部</option>
+            <option value="10k">&lt; 10,000</option>
+            <option value="20k">&lt; 20,000</option>
+            <option value="30k">&lt; 30,000</option>
+            <option value="40k">&lt; 40,000</option>
+            <option value="50k">&lt; 50,000</option>
+            <option value="60k">&lt; 60,000</option>
+            <option value="70k">&lt; 70,000</option>
+            <option value="80k">&lt; 80,000</option>
+            <option value="90k">&lt; 90,000</option>
+            <option value="100k">&lt; 100,000</option>
+            <option value="100k_plus">&ge; 100,000</option>
+        </select>
+    </div>
+
+    <div class="control-group">
+        <label>Add Score</label>
+        <select id="filterScore">
+            <option value="all">全部</option>
+            <option value="90">&ge; 90</option>
+            <option value="80">&ge; 80</option>
+            <option value="70">&ge; 70</option>
+            <option value="60">&ge; 60</option>
+            <option value="50">&ge; 50</option>
+            <option value="40">&ge; 40</option>
+            <option value="30">&ge; 30</option>
+            <option value="20">&ge; 20</option>
+            <option value="10">&ge; 10</option>
+        </select>
+    </div>
+
+    <div class="control-group">
+        <label>均線條件</label>
+        <select id="filterMA">
+            <option value="all">全部</option>
+            <option value="ma20">低於 MA20</option>
+            <option value="ma60">低於 MA60</option>
+            <option value="ma120">低於 MA120</option>
+            <option value="ma240">低於 MA240</option>
+        </select>
+    </div>
+</div>
+
+<div style="margin: -8px 0 16px; color: var(--sub-text); font-size: 0.82rem;">
+    📌 <b>P&L / 26 EPS 進度</b> = 正損益 ÷ 26 EPS 成長率。
+    例如 P&L +12%、26 EPS ↑ +20% → 60%；100% 代表股價漲幅已追上 EPS 成長。
+    僅對正損益且 26 EPS 成長為正數的標的顯示。
+</div>
+
+<div class="table-container">
+    <table id="stockTable">
+        <thead></thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<script>
+let stockData = [];
+let sortKey = '';
+let sortAsc = true;
+
+async function loadData() {
+    try {
+        const response = await fetch("inventory_eps_check.json?t=" + Date.now());
+        stockData = await response.json();
+        applyFilters();
+    } catch (e) {
+        document.getElementById("updated").textContent = "資料載入失敗，請檢查 JSON 檔案。";
+    }
+}
+
+function getPnlClass(val) {
+    if (val === null || val === undefined) return '';
+    const num = parseFloat(val);
+    if (num <= -10) return 'pnl-deep-red';
+    if (num < 0) return 'pnl-light-red';
+    if (num > 0 && num < 10) return 'pnl-light-green';
+    if (num >= 10) return 'pnl-deep-green';
+    return '';
+}
+
+function getScoreClass(val) {
+    if (val === null || val === undefined) return '';
+    const num = parseFloat(val);
+    if (num >= 70) return 'score-high';
+    if (num >= 40) return 'score-mid';
+    if (num > 0) return 'score-low';
+    return '';
+}
+
+function getInvestClass(val) {
+    if (val === null || val === undefined) return '';
+    const num = parseFloat(val);
+    if (num >= 100000) return 'inv-tier4';
+    if (num >= 60000) return 'inv-tier3';
+    if (num >= 30000) return 'inv-tier2';
+    return 'inv-tier1';
+}
+
+function getPEClass(val) {
+    if (!val || typeof val !== 'string') return '';
+
+    // 解析如 "18.5 (22.3)" 或 "18.5(22.3)" 的格式
+    const match = val.match(/([\d\.]+)\s*\(([\d\.]+)\)/);
+    if (match) {
+        const outsideVal = parseFloat(match[1]); // 括號外
+        const insideVal = parseFloat(match[2]);  // 括號內
+
+        if (insideVal < outsideVal) {
+            return 'pe-green'; // 括號內小於括號外 -> 淺綠
+        } else if (insideVal > outsideVal) {
+            return 'pe-red';   // 括號內大於括號外 -> 淺紅
+        }
+    }
+    return '';
+}
+
+function getPnlValue(row) {
+    return parseFloat(row['P&L %'] ?? row['profit_rate'] ?? NaN);
+}
+
+function getEpsGrowthValue(row) {
+    // 優先抓常見的 26 EPS YoY / 26 EPS↑ 欄位
+    const keys = Object.keys(row);
+    const key = keys.find(k => {
+        const s = k.toLowerCase().replace(/\s/g, '');
+        return s.includes('26') &&
+               (s.includes('eps') || s.includes('26eps')) &&
+               (s.includes('yoy') || s.includes('↑') || s.includes('%'));
+    });
+    if (!key) return NaN;
+    return parseFloat(row[key]);
+}
+
+function getTargetInvestValue(row) {
+    const candidates = [
+        'Target Invest', 'target_invest', 'Target. Invest',
+        'Target Investment', 'target_investment', '目標投入', '目標投資'
+    ];
+    for (const key of candidates) {
+        if (row[key] !== undefined && row[key] !== null && row[key] !== '') {
+            const value = parseFloat(String(row[key]).replace(/,/g, ''));
+            if (Number.isFinite(value)) return value;
+        }
+    }
+    return NaN;
+}
+
+function getProgressInfo(row) {
+    const pnl = getPnlValue(row);
+
+    // 正損益：P&L / 26 EPS YoY
+    if (Number.isFinite(pnl) && pnl > 0) {
+        const eps = getEpsGrowthValue(row);
+        if (!Number.isFinite(eps) || eps <= 0) {
+            return { mode: 'positive', valid: false, pct: 0, pnl, eps };
+        }
+        const ratio = (pnl / eps) * 100;
+        return {
+            mode: 'positive', valid: true, pct: ratio, pnl, eps,
+            displayPct: Math.round(ratio)
+        };
+    }
+
+    // 負損益：Curr. Invest / Target Invest
+    if (Number.isFinite(pnl) && pnl < 0) {
+        const curr = parseFloat(row['Curr. Invest'] ?? row['current_invest'] ?? NaN);
+        const target = getTargetInvestValue(row);
+        if (!Number.isFinite(curr) || !Number.isFinite(target) || target <= 0) {
+            return { mode: 'negative', valid: false, pct: 0, pnl, curr, target };
+        }
+        const ratio = (curr / target) * 100;
+        return {
+            mode: 'negative', valid: true, pct: ratio, pnl, curr, target,
+            displayPct: Math.round(ratio)
+        };
+    }
+
+    return { mode: 'none', valid: false, pct: 0, pnl };
+}
+
+function renderProgressCell(td, row) {
+    const info = getProgressInfo(row);
+    td.className = 'progress-cell';
+
+    if (!info.valid) {
+        td.innerHTML = '<span style="color:var(--sub-text)">—</span>';
+        td.title = info.mode === 'negative'
+            ? '負損益，但沒有有效的 Target Invest 資料'
+            : '沒有足夠資料計算進度';
+        return;
+    }
+
+    const width = Math.min(Math.max(info.pct, 0), 100);
+
+    if (info.mode === 'positive') {
+        let barClass = 'progress-normal';
+        if (info.pct >= 100) barClass = 'progress-over';
+        else if (info.pct >= 80) barClass = 'progress-reached';
+        else if (info.pct >= 50) barClass = 'progress-near';
+
+        const status = info.pct >= 100 ? '已超過 EPS 基準' : '未達 EPS 基準';
+        td.innerHTML = `
+            <div class="progress-wrap">
+                <div class="progress-track">
+                    <div class="progress-bar ${barClass}" style="width:${width}%"></div>
+                </div>
+                <span class="progress-text">${info.displayPct}%</span>
+            </div>
+            <div class="progress-detail">P&L ${info.pnl.toFixed(1)}% / EPS +${info.eps.toFixed(1)}% · ${status}</div>
+        `;
+        td.title = `正損益：P&L ${info.pnl.toFixed(1)}% ÷ 26 EPS 成長 ${info.eps.toFixed(1)}% = ${info.pct.toFixed(1)}%`;
+        return;
+    }
+
+    // 負損益：用目前投入 / 目標投入
+    const barClass = info.pct >= 100 ? 'progress-over' : 'progress-negative';
+    const remaining = Math.max(info.target - info.curr, 0);
+    const status = info.pct >= 100 ? '已達/超過目標投入' : `還可投入 ${remaining.toLocaleString()}`;
+    td.innerHTML = `
+        <div class="progress-wrap">
+            <div class="progress-track">
+                <div class="progress-bar ${barClass}" style="width:${width}%"></div>
+            </div>
+            <span class="progress-text">${info.displayPct}%</span>
+        </div>
+        <div class="progress-detail">${info.curr.toLocaleString()} / ${info.target.toLocaleString()} · ${status}</div>
+    `;
+    td.title = `負損益：Curr. Invest ${info.curr.toLocaleString()} ÷ Target Invest ${info.target.toLocaleString()} = ${info.pct.toFixed(1)}%`;
+}
+
+function applyFilters() {
+    const keyword = document.getElementById("search").value.toLowerCase();
+    const pnlOpt = document.getElementById("filterPnl").value;
+    const investOpt = document.getElementById("filterInvest").value;
+    const scoreOpt = document.getElementById("filterScore").value;
+    const maOpt = document.getElementById("filterMA").value;
+
+    let filtered = stockData.filter(row => {
+        const matchesSearch = Object.values(row).join(" ").toLowerCase().includes(keyword);
+
+        const pnl = parseFloat(row['P&L %'] || row['profit_rate'] || 0);
+        let matchesPnl = true;
+        if (pnlOpt === 'pos') matchesPnl = pnl > 0;
+        if (pnlOpt === 'neg') matchesPnl = pnl < 0;
+
+        const inv = parseFloat(row['Curr. Invest'] || row['current_invest'] || 0);
+        let matchesInvest = true;
+        if (investOpt === '10k') matchesInvest = inv < 10000;
+        else if (investOpt === '20k') matchesInvest = inv < 20000;
+        else if (investOpt === '30k') matchesInvest = inv < 30000;
+        else if (investOpt === '40k') matchesInvest = inv < 40000;
+        else if (investOpt === '50k') matchesInvest = inv < 50000;
+        else if (investOpt === '60k') matchesInvest = inv < 60000;
+        else if (investOpt === '70k') matchesInvest = inv < 70000;
+        else if (investOpt === '80k') matchesInvest = inv < 80000;
+        else if (investOpt === '90k') matchesInvest = inv < 90000;
+        else if (investOpt === '100k') matchesInvest = inv < 100000;
+        else if (investOpt === '100k_plus') matchesInvest = inv >= 100000;
+
+        const score = parseFloat(row['Add Score'] || row['add_score'] || 0);
+        let matchesScore = true;
+        if (scoreOpt !== 'all') matchesScore = score >= parseFloat(scoreOpt);
+
+        let matchesMA = true;
+        if (maOpt !== 'all') {
+            matchesMA = row[maOpt] === true || row['below_' + maOpt] === true;
+        }
+
+        return matchesSearch && matchesPnl && matchesInvest && matchesScore && matchesMA;
+    });
+
+    if (sortKey) {
+        filtered.sort((a, b) => {
+            let valA, valB;
+            if (sortKey === '__pnl_eps_progress') {
+                valA = getProgressInfo(a).valid ? getProgressInfo(a).pct : -Infinity;
+                valB = getProgressInfo(b).valid ? getProgressInfo(b).pct : -Infinity;
+            } else {
+                valA = a[sortKey] ?? '';
+                valB = b[sortKey] ?? '';
+                if (!isNaN(valA) && !isNaN(valB)) {
+                    valA = parseFloat(valA);
+                    valB = parseFloat(valB);
+                }
+            }
+            if (valA < valB) return sortAsc ? -1 : 1;
+            if (valA > valB) return sortAsc ? 1 : -1;
+            return 0;
+        });
+    }
+
+    renderTable(filtered);
+
+    document.getElementById("updated").textContent =
+        `顯示筆數：${filtered.length} / ${stockData.length} 檔 ｜ 最後更新：${new Date().toLocaleString("zh-TW")}`;
+}
+
+function renderTable(data) {
+    const table = document.getElementById("stockTable");
+    const thead = table.querySelector("thead");
+    const tbody = table.querySelector("tbody");
+
+    thead.innerHTML = "";
+    tbody.innerHTML = "";
+
+    if (!data.length) {
+        tbody.innerHTML = "<tr><td colspan='100%'>沒有符合條件的資料</td></tr>";
+        return;
+    }
+
+    const dataColumns = Object.keys(stockData[0]);
+
+    // 將「P&L vs 26 EPS 進度」插在 P&L 欄位後面
+    const pnlColumnIndex = dataColumns.findIndex(c => c.includes("P&L") || c.includes("profit_rate"));
+    const progressColumn = "__pnl_eps_progress";
+    const columns = [...dataColumns];
+    if (!columns.includes(progressColumn)) {
+        const insertAt = pnlColumnIndex >= 0 ? pnlColumnIndex + 1 : 0;
+        columns.splice(insertAt, 0, progressColumn);
+    }
+
+    const headerRow = document.createElement("tr");
+    columns.forEach(column => {
+        const th = document.createElement("th");
+        const displayName = column === progressColumn ? "進度" : column;
+        th.textContent = displayName + (sortKey === column ? (sortAsc ? " ▲" : " ▼") : "");
+        if (column === progressColumn) {
+            th.style.cursor = "default";
+            th.title = "正損益：P&L / 26 EPS；負損益：Curr. Invest / Target Invest";
+        } else th.onclick = () => {
+            if (sortKey === column) {
+                sortAsc = !sortAsc;
+            } else {
+                sortKey = column;
+                sortAsc = true;
+            }
+            applyFilters();
+        };
+        headerRow.appendChild(th);
+    });
+    thead.appendChild(headerRow);
+
+    data.forEach(row => {
+        const tr = document.createElement("tr");
+        columns.forEach(column => {
+            const td = document.createElement("td");
+
+            if (column === progressColumn) {
+                renderProgressCell(td, row);
+                tr.appendChild(td);
+                return;
+            }
+
+            let value = row[column];
+
+            if (value === null || value === undefined) value = "N/A";
+            td.textContent = value;
+
+            // 各欄位視覺套用邏輯
+            if (column.includes("P&L") || column.includes("profit_rate")) {
+                td.className = getPnlClass(value);
+            } else if (column.includes("Add Score") || column.includes("add_score")) {
+                td.className = getScoreClass(value);
+            } else if (column.includes("Curr. Invest") || column.includes("current_invest")) {
+                td.className = getInvestClass(value);
+            } else if (column.toUpperCase().includes("PE") || column.includes("本益比")) {
+                td.className = getPEClass(String(value));
+            }
+
+            tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+    });
+}
+
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute("data-theme");
+    const targetTheme = currentTheme === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", targetTheme);
+}
+
+document.querySelectorAll(".controls-card select, .controls-card input").forEach(element => {
+    element.addEventListener("input", applyFilters);
+});
+
+loadData();
+</script>
 
 </body>
 </html>
