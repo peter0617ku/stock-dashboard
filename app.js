@@ -132,8 +132,38 @@ function updateFilterSummary() {
   document.getElementById("resultCount").textContent = `顯示 ${visible} / ${allStockData.length} 檔`;
 }
 
+function updateConfiguredFilterUI() {
+  const groups = document.querySelectorAll(".filter-group");
+  let totalConfigured = 0;
+  groups.forEach(group => {
+    const selects = [...group.querySelectorAll("select")];
+    let configured = 0;
+    selects.forEach(select => {
+      // PE 欄位版本是計算模式，不算作額外篩選門檻。
+      const isConfigured = select.id !== "peType" && select.value !== "";
+      select.classList.toggle("is-configured", isConfigured);
+      const label = group.querySelector(`label[for="${select.id}"]`);
+      if (label) label.classList.toggle("is-configured-label", isConfigured);
+      if (isConfigured) configured++;
+    });
+    totalConfigured += configured;
+    let indicator = group.querySelector(".group-configured-count");
+    if (!indicator) {
+      indicator = document.createElement("span");
+      indicator.className = "group-configured-count";
+      const heading = group.querySelector("h3");
+      if (heading) heading.appendChild(indicator);
+    }
+    indicator.textContent = configured ? `已設定 ${configured}` : "尚未設定";
+    indicator.classList.toggle("has-configured", configured > 0);
+  });
+  const panel = document.querySelector(".filter-panel");
+  if (panel) panel.classList.toggle("has-configured-filters", totalConfigured > 0);
+}
+
 function applyAdvancedFilters() {
   activeFilterState = readFilters();
+  updateConfiguredFilterUI();
   if (table) table.draw();
   updateFilterSummary();
 }
@@ -142,6 +172,7 @@ function clearAdvancedFilters() {
   document.querySelectorAll(".filter-panel select").forEach(el => el.value = "");
   document.getElementById("peType").value = "adjusted";
   activeFilterState = readFilters();
+  updateConfiguredFilterUI();
   if (table) table.draw();
   updateFilterSummary();
 }
@@ -153,7 +184,7 @@ function applyPreset(name) {
   document.getElementById("peType").value = "adjusted";
   const set = (id, value) => document.getElementById(id).value = String(value);
   if (name === "convergence") {
-    set("pe26Min", 25); set("pe27Max", 20); set("yoy27Min", 50);
+    set("pe26Min", 35); set("pe27Max", 20); set("yoy27Min", 50);
   } else if (name === "growth") {
     set("pe27Max", 25); set("yoy27Min", 20); set("peg27Max", 1.5);
   } else if (name === "lowpe") {
@@ -267,11 +298,13 @@ function initDashboard(data) {
     drawCallback: function() { updateFilterSummary(); }
   });
   activeFilterState = readFilters();
+  updateConfiguredFilterUI();
   updateFilterSummary();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   initFilterOptions();
+  updateConfiguredFilterUI();
   document.getElementById("applyFilters").addEventListener("click", applyAdvancedFilters);
   document.getElementById("clearFilters").addEventListener("click", clearAdvancedFilters);
   document.querySelectorAll(".preset-btn").forEach(btn =>
