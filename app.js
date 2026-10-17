@@ -148,6 +148,9 @@ function clearAdvancedFilters() {
 
 function applyPreset(name) {
   clearAdvancedFilters();
+  // 每次點擊快速策略，都明確切換為修正後本益比版本。
+  // 若個別股票缺少修正後本益比，getPEValue() 會自動回退原始本益比。
+  document.getElementById("peType").value = "adjusted";
   const set = (id, value) => document.getElementById(id).value = String(value);
   if (name === "convergence") {
     set("pe26Min", 35); set("pe27Max", 20); set("yoy27Min", 50);
