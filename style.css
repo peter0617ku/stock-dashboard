@@ -5,170 +5,69 @@ body {
     color: #e6edf3;
     font-family: "Segoe UI", "Noto Sans TC", sans-serif;
 }
-
-.container {
-    width: 98%;
-    margin: auto;
-}
-
-h1 {
-    margin-top: 0;
-    margin-bottom: 15px;
-    font-size: 40px;
-    font-weight: 700;
-}
-
+.container { width: 98%; margin: auto; }
+h1 { margin-top: 0; margin-bottom: 15px; font-size: 34px; font-weight: 700; }
+h2 { margin: 0 0 6px; font-size: 23px; }
+h3 { margin: 0 0 14px; color: #79c0ff; font-size: 17px; }
+p { margin: 0; }
 .summaryBar {
-    background: #22272e;
-    border: 1px solid #30363d;
-    border-radius: 10px;
-    padding: 12px 18px;
-    margin-bottom: 18px;
-    font-size: 16px;
+    background: #22272e; border: 1px solid #30363d; border-radius: 10px;
+    padding: 12px 18px; margin-bottom: 18px; font-size: 16px;
 }
-
-.toolbar {
-    margin-bottom: 18px;
+.filter-panel {
+    background: #1d222a; border: 1px solid #39414d; border-radius: 14px;
+    padding: 20px; margin-bottom: 18px; box-shadow: 0 6px 20px rgba(0,0,0,.14);
 }
-
+.filter-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.filter-heading p, .hint { color: #9da7b3; font-size: 12px; line-height: 1.5; margin-top: 5px; }
+.filter-actions, .preset-row { display: flex; flex-wrap: wrap; gap: 8px; }
 button {
-    background: #30363d;
-    color: white;
-    border: 1px solid #484f58;
-    border-radius: 8px;
-    padding: 8px 16px;
-    margin-right: 10px;
-    cursor: pointer;
-    transition: 0.15s;
-    font-size: 15px;
+    background: #30363d; color: white; border: 1px solid #484f58;
+    border-radius: 8px; padding: 9px 14px; cursor: pointer;
+    transition: background .15s, transform .15s; font-size: 14px;
 }
-
-button:hover {
-    background: #3d444d;
-    transform: translateY(-1px);
+button:hover { background: #3d444d; transform: translateY(-1px); }
+.primary-btn { background: #1f6feb; border-color: #388bfd; }
+.primary-btn:hover { background: #388bfd; }
+.preset-row { align-items: center; border-top: 1px solid #30363d; border-bottom: 1px solid #30363d; padding: 14px 0; margin: 16px 0; }
+.preset-label { color: #9da7b3; font-size: 13px; margin-right: 4px; }
+.preset-btn { background: #252d38; border-color: #3b526e; color: #c9e1ff; }
+.filter-grid { display: grid; grid-template-columns: repeat(4, minmax(180px, 1fr)); gap: 14px; }
+.filter-group { background: #22272e; border: 1px solid #30363d; border-radius: 10px; padding: 15px; min-width: 0; }
+.filter-group label { display: block; color: #c9d1d9; font-size: 13px; margin: 12px 0 5px; }
+.filter-group select {
+    width: 100%; padding: 9px 10px; background: #171b22; color: #e6edf3;
+    border: 1px solid #484f58; border-radius: 7px; font-size: 14px;
 }
-
-/* ---------------- DataTables ---------------- */
-
-.dataTables_wrapper {
-    color: #e6edf3 !important;
-}
-
-.dataTables_wrapper .dataTables_length,
-.dataTables_wrapper .dataTables_filter,
-.dataTables_wrapper .dataTables_info,
-.dataTables_wrapper .dataTables_paginate {
-    color: #e6edf3 !important;
-    margin-bottom: 10px;
-}
-
-.dataTables_wrapper input,
-.dataTables_wrapper select {
-    background: #22272e !important;
-    color: #e6edf3 !important;
-    border: 1px solid #444 !important;
-    border-radius: 6px;
-}
-
-table.dataTable {
-    background: #22272e !important;
-    color: #e6edf3 !important;
-    border-collapse: collapse !important;
-}
-
-table.dataTable thead th {
-    background: #2d333b !important;
-    color: #ffffff !important;
-    border-bottom: 1px solid #444 !important;
-    position: sticky;
-    top: 0;
-    z-index: 2;
-    font-weight: bold;
-}
-
-table.dataTable tbody td {
-    border-bottom: 1px solid #30363d !important;
-    vertical-align: middle;
-}
-
-table.dataTable tbody tr:nth-child(even) {
-    background: #1f242b !important;
-}
-
-table.dataTable tbody tr:hover {
-    background: #313846 !important;
-}
-
-/* ---------------- Badge ---------------- */
-
-.badge {
-    display: inline-block;
-    min-width: 75px;
-    padding: 5px 10px;
-    border-radius: 999px;
-    text-align: center;
-    font-weight: 700;
-    font-size: 13px;
-}
-
-.badge-true {
-    background: #238636;
-    color: white;
-}
-
-.badge-false {
-    background: #da3633;
-    color: white;
-}
-
-/* ---------------- PEG ---------------- */
-
-.peg-low {
-    background: #1f883d;
-    color: white;
-}
-
-.peg-mid {
-    background: #d29922;
-    color: black;
-}
-
-.peg-high {
-    background: #da3633;
-    color: white;
-}
-
-/* ---------------- 股票代號 ---------------- */
-
-.stock-id {
-    font-weight: 700;
-    color: #58a6ff;
-}
-
-/* ---------------- 公司名稱 ---------------- */
-
-.company-name {
-    font-weight: 600;
-    color: #ffffff;
-}
-
-/* ---------------- 手機板 ---------------- */
-
+.active-filters { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 16px; padding-top: 14px; border-top: 1px solid #30363d; font-size: 13px; }
+#filterSummary { color: #c9d1d9; line-height: 1.8; }
+.result-count { margin-left: auto; padding: 6px 10px; border-radius: 999px; background: #173b2a; color: #7ee787; font-weight: 700; white-space: nowrap; }
+.toolbar { margin-bottom: 18px; }
+.dataTables_wrapper { color: #e6edf3 !important; }
+.dataTables_wrapper .dt-length, .dataTables_wrapper .dt-search, .dataTables_wrapper .dt-info, .dataTables_wrapper .dt-paging { color: #e6edf3 !important; margin-bottom: 10px; }
+.dataTables_wrapper input, .dataTables_wrapper select { background: #22272e !important; color: #e6edf3 !important; border: 1px solid #444 !important; border-radius: 6px; }
+table.dataTable { background: #22272e !important; color: #e6edf3 !important; border-collapse: collapse !important; }
+table.dataTable thead th { background: #2d333b !important; color: #fff !important; border-bottom: 1px solid #444 !important; position: sticky; top: 0; z-index: 2; font-weight: bold; }
+table.dataTable tbody td { border-bottom: 1px solid #30363d !important; vertical-align: middle; }
+table.dataTable tbody tr:nth-child(even) { background: #1f242b !important; }
+table.dataTable tbody tr:hover { background: #313846 !important; }
+.badge { display: inline-block; min-width: 58px; padding: 5px 9px; border-radius: 999px; text-align: center; font-weight: 700; font-size: 12px; }
+.badge-true { background: #238636; color: white; }
+.badge-false { background: #da3633; color: white; }
+.peg-low { background: #1f883d; color: white; }
+.peg-mid { background: #d29922; color: black; }
+.peg-high { background: #da3633; color: white; }
+.stock-id { font-weight: 700; color: #58a6ff; }
+.company-name { font-weight: 600; color: #fff; }
+@media (max-width: 1100px) { .filter-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 768px) {
-
-    body {
-        padding: 10px;
-    }
-
-    h1 {
-        font-size: 28px;
-    }
-
-    .summaryBar {
-        font-size: 14px;
-    }
-
-    button {
-        margin-bottom: 8px;
-    }
+    body { padding: 10px; }
+    h1 { font-size: 27px; }
+    h2 { font-size: 20px; }
+    .filter-panel { padding: 13px; }
+    .filter-grid { grid-template-columns: 1fr; }
+    .filter-actions { width: 100%; }
+    .filter-actions button { flex: 1; }
+    .result-count { margin-left: 0; }
+    button { margin-bottom: 2px; }
 }

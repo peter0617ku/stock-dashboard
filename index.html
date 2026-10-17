@@ -4,39 +4,119 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stock Dashboard</title>
-
-    <!-- DataTables -->
-    <link rel="stylesheet"
-          href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.min.css">
-
-    <!-- jQuery + DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.min.css">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
-
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-
 <div class="container">
-
     <h1>📈 Stock Dashboard</h1>
+    <div id="summaryBar" class="summaryBar">Loading...</div>
 
-    <div id="summaryBar" class="summaryBar">
-        Loading...
-    </div>
+    <section class="filter-panel">
+        <div class="filter-heading">
+            <div>
+                <h2>進階選股條件</h2>
+                <p>各條件可同時使用；上下限留白代表不限制。數值以資料來源原始欄位判斷。</p>
+            </div>
+            <div class="filter-actions">
+                <button type="button" class="primary-btn" id="applyFilters">套用條件</button>
+                <button type="button" id="clearFilters">清除條件</button>
+            </div>
+        </div>
+
+        <div class="preset-row">
+            <span class="preset-label">快速策略</span>
+            <button type="button" class="preset-btn" data-preset="convergence">高成長估值收斂</button>
+            <button type="button" class="preset-btn" data-preset="growth">成長股合理價</button>
+            <button type="button" class="preset-btn" data-preset="lowpe">低本益比</button>
+            <button type="button" class="preset-btn" data-preset="highgrowth">高成長潛力</button>
+            <button type="button" class="preset-btn" data-preset="leftside">左側觀察名單</button>
+        </div>
+
+        <div class="filter-grid">
+            <div class="filter-group">
+                <h3>本益比 PE</h3>
+                <label for="pe26Min">2026 PE 下限</label>
+                <select id="pe26Min" data-key="26年本益比" data-bound="min"></select>
+                <label for="pe26Max">2026 PE 上限</label>
+                <select id="pe26Max" data-key="26年本益比" data-bound="max"></select>
+                <label for="pe27Min">2027 PE 下限</label>
+                <select id="pe27Min" data-key="27年本益比" data-bound="min"></select>
+                <label for="pe27Max">2027 PE 上限</label>
+                <select id="pe27Max" data-key="27年本益比" data-bound="max"></select>
+                <label for="peType">PE 欄位版本</label>
+                <select id="peType">
+                    <option value="raw">原始本益比</option>
+                    <option value="adjusted">修正後本益比</option>
+                </select>
+                <p class="hint">快捷門檻：5、10、15、20、25、30、35、40、45、50 倍。</p>
+            </div>
+
+            <div class="filter-group">
+                <h3>EPS 年增率 YoY (%)</h3>
+                <label for="yoy26Min">2026 YoY 下限</label>
+                <select id="yoy26Min"></select>
+                <label for="yoy26Max">2026 YoY 上限</label>
+                <select id="yoy26Max"></select>
+                <label for="yoy27Min">2027 YoY 下限</label>
+                <select id="yoy27Min"></select>
+                <label for="yoy27Max">2027 YoY 上限</label>
+                <select id="yoy27Max"></select>
+                <p class="hint">負成長可用負數門檻篩選；空值不會被當成 0。</p>
+            </div>
+
+            <div class="filter-group">
+                <h3>PEG</h3>
+                <label for="peg26Min">2026 PEG 下限</label>
+                <select id="peg26Min"></select>
+                <label for="peg26Max">2026 PEG 上限</label>
+                <select id="peg26Max"></select>
+                <label for="peg27Min">2027 PEG 下限</label>
+                <select id="peg27Min"></select>
+                <label for="peg27Max">2027 PEG 上限</label>
+                <select id="peg27Max"></select>
+                <p class="hint">PEG 缺值、非數字或無法合理計算的資料不會自動視為便宜。</p>
+            </div>
+
+            <div class="filter-group">
+                <h3>其他條件</h3>
+                <label for="portfolioFilter">庫存狀態</label>
+                <select id="portfolioFilter">
+                    <option value="">全部</option>
+                    <option value="YES">僅在庫存</option>
+                    <option value="NO">僅不在庫存</option>
+                </select>
+                <label for="maFilter">均線條件</label>
+                <select id="maFilter">
+                    <option value="">不限</option>
+                    <option value="above_ma20">站上 MA20</option>
+                    <option value="above_ma60">站上 MA60</option>
+                    <option value="above_ma120">站上 MA120</option>
+                    <option value="above_ma240">站上 MA240</option>
+                </select>
+                <label for="scoreMin">投資價值分數下限</label>
+                <select id="scoreMin"></select>
+                <label for="scoreMax">投資價值分數上限</label>
+                <select id="scoreMax"></select>
+            </div>
+        </div>
+
+        <div class="active-filters">
+            <strong>目前篩選結果：</strong>
+            <span id="filterSummary">尚未套用額外條件</span>
+            <span class="result-count" id="resultCount">載入中…</span>
+        </div>
+    </section>
 
     <div class="toolbar">
-        <button onclick="filterPortfolio('')">全部</button>
-        <button onclick="filterPortfolio('YES')">✅ 在庫存</button>
-        <button onclick="filterPortfolio('NO')">❌ 不在庫存</button>
+        <button type="button" onclick="filterPortfolio('')">全部庫存狀態</button>
+        <button type="button" onclick="filterPortfolio('YES')">✅ 在庫存</button>
+        <button type="button" onclick="filterPortfolio('NO')">❌ 不在庫存</button>
     </div>
-
     <table id="stockTable" class="display nowrap" style="width:100%"></table>
-
 </div>
-
 <script src="app.js"></script>
-
 </body>
 </html>
