@@ -184,7 +184,7 @@ function applyPreset(name) {
   document.getElementById("peType").value = "adjusted";
   const set = (id, value) => document.getElementById(id).value = String(value);
   if (name === "convergence") {
-    set("pe26Min", 35); set("pe27Max", 20); set("yoy27Min", 50);
+    set("pe26Min", 25); set("pe27Max", 20); set("yoy27Min", 50);
   } else if (name === "growth") {
     set("pe27Max", 25); set("yoy27Min", 20); set("peg27Max", 1.5);
   } else if (name === "lowpe") {
