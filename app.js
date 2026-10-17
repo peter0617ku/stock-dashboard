@@ -45,9 +45,13 @@ function initFilterOptions() {
   ["scoreMin","scoreMax"].forEach(id => addBoundOptions(id, scores, ""));
 }
 
-function getPEKey(year) {
-  return document.getElementById("peType").value === "adjusted"
-    ? `${year}年本益比(修正)` : `${year}年本益比`;
+function getPEValue(row, year, forceAdjusted = false) {
+  const useAdjusted = forceAdjusted || document.getElementById("peType").value === "adjusted";
+  const raw = numeric(row[`${year}年本益比`]);
+  const adjusted = numeric(row[`${year}年本益比(修正)`]);
+  // 修正後本益比優先；只有修正值缺失或非數字時才回退原始本益比。
+  if (useAdjusted) return adjusted !== null ? adjusted : raw;
+  return raw;
 }
 
 function readFilters() {
@@ -77,8 +81,8 @@ function inRange(value, min, max) {
 }
 
 function rowPassesFilters(row, f) {
-  const pe26 = numeric(row[getPEKey("26")]);
-  const pe27 = numeric(row[getPEKey("27")]);
+  const pe26 = numeric(getPEValue(row, "26"));
+  const pe27 = numeric(getPEValue(row, "27"));
   const yoy26 = numeric(row["26年eps yoy"]);
   const yoy27 = numeric(row["27年eps yoy"]);
   const peg26 = numeric(row["26年PEG"]);
@@ -120,7 +124,8 @@ function updateFilterSummary() {
   add("分數", f.scoreMin, f.scoreMax);
   if (f.portfolio) labels.push(f.portfolio === "YES" ? "僅在庫存" : "僅不在庫存");
   if (f.ma) labels.push(`站上 ${f.ma.replace("above_ma","MA")}`);
-  const peType = document.getElementById("peType").value === "adjusted" ? "修正 PE" : "原始 PE";
+  const peType = document.getElementById("peType").value === "adjusted"
+    ? "修正 PE（缺值回退原始 PE）" : "原始 PE";
   if (labels.some(x => x.includes("PE"))) labels.push(`使用${peType}`);
   document.getElementById("filterSummary").textContent = labels.length ? labels.join("　｜　") : "尚未套用額外條件";
   const visible = table ? table.rows({ filter: "applied" }).count() : 0;
@@ -135,7 +140,7 @@ function applyAdvancedFilters() {
 
 function clearAdvancedFilters() {
   document.querySelectorAll(".filter-panel select").forEach(el => el.value = "");
-  document.getElementById("peType").value = "raw";
+  document.getElementById("peType").value = "adjusted";
   activeFilterState = readFilters();
   if (table) table.draw();
   updateFilterSummary();
