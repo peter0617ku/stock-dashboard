@@ -3169,7 +3169,7 @@
     "Price(Est)": 467.0,
     "ref_price": 353.0,
     "above_ma20": false,
-    "above_ma60": true,
+    "above_ma60": false,
     "above_ma120": true,
     "above_ma240": true,
     "In Portfolio?": "NO"
